@@ -17,7 +17,6 @@ class UrlShortenerController extends Controller
                 
                 if($longUrl != '' || $newGeneratedUrl != ''){
                     $urlFound = Url::where('old_url',$longUrl)->get(["id","new_url"])->toArray();
-
                     if (!empty($urlFound)) {
                         return $urlFound[0]['new_url'];
                     }
@@ -38,18 +37,21 @@ class UrlShortenerController extends Controller
             dd($e);
         }
     }
-
+    // handle new urls and redirect to old url
     public function handle(Request $request, $url){
         $uri = $_SERVER['REQUEST_URI'];
         if ($uri == '') {
             return abort(404);
         }
-        $url = Url::where('new_url','like','%'.$uri.'%')->get('old_url');
+        $url = Url::where('new_url','like','%'.$uri.'%')->get(["id","old_url","clicks"]);
 
         try {
             if ($url =='' || count($url) == 0) {
                 return abort(404);
             }else{
+                $urlFound = Url::find($url[0]['id']);
+                $urlFound->clicks = $url[0]['clicks']+1;
+                $urlFound->save();
                 return redirect($url[0]['old_url']);
             }
         } catch (Exception $e) {

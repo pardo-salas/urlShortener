@@ -17,6 +17,7 @@ return new class extends Migration
             $table->mediumText('new_url');
             $table->mediumText('user_ip')->nullable();
             $table->integer('user_id')->nullable();
+            $table->integer('clicks')->default(1);
             $table->timestamps();
         });
     }

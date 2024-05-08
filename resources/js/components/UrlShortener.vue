@@ -1,18 +1,20 @@
 <template>
     <div class="container">
-        <div class="row">
-            <div class="col-md-12">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
                 <div class="shortener">
                     <div class="section">
                         <div class="section-heading text-center">
-                            <h1>Url Shortener</h1>
+                            <h1 class="fs-1 fw-bold">Surl URL shortener</h1>
                             <br>
+                            <!-- Title -->
                             <div class="py-2">
                                 <div class="pageIntroDescription border border-info p-3 mb-0">
-                                    Professional Url Shortener, Free and fast
+                                    Simple and fast URL shortener! Url Short allows to shorten long links from Instagram, Facebook, YouTube, Twitter, Linked In, WhatsApp, TikTok, blogs and sites.
                                 </div>
                             </div>
                             <br>
+                            <!-- Shortener -->
                             <div v-if="props.authorized">
                                 <form action="" class="form">
                                     <div class="input-group">
@@ -28,6 +30,7 @@
                                 <p v-if="!urlNotFound" class="alert alert-danger">
                                     Url is not valid
                                 </p>
+                                <!-- Section copy button -->
                                 <div class="copylink mb-5"> 
                                     <span id="output_url"></span>
                                     <span id="clipboard" @click.prevent="CopyUrl">
@@ -35,6 +38,7 @@
                                     </span>
                                 </div>
                             </div>
+                            <!-- Link register -->
                             <div v-else>
                                 <h5>You are required to register </h5>
                                 <hr>
@@ -60,27 +64,27 @@
 import { ref,defineProps } from 'vue';
 
 const props =defineProps({
-    authorized:Boolean
+    authorized:Number
 })
+
 //Variables
 let url = ref("")
 let urlNotFound = ref(true)
 let copyText = ref('Copy text to clipboard')
 let result = ref("")
-//Funciones
+//Functions
 function shortenUrl(){
-
     let newUrl = url.value
     let newArray = newUrl.split('//')
     let counter = 0
     let resultNewUrl = Math.round((Math.pow(36,8) - Math.random() * Math.pow(36,8))).toString(36).slice(1)
 
     for (let i = 0; i < newArray.length; i++) {
-        //Valida si el url comienza con http o https
+        //Validate if the urls is rigth
         if (newArray[i] == 'http:' || newArray[i] == 'https:') {
             counter++
         }
-        //Valida si el url empieza con www
+        //Validate if the url starts with wwww
         if (counter==0) {
             let newArrayOne = newUrl.split('.')
             if (newArrayOne[i]=='www') {
@@ -91,12 +95,11 @@ function shortenUrl(){
                 counter++
             }
         }
-        //Si ninguna de las validaciones es correcta, se marca como no falso 
+        //If validations is 0 then value is false
         if(counter==0){
             urlNotFound.value = false;
         }else{
             urlNotFound.value = true;
-            //Caso contrario se llama la api para la creacion del link
             let currentUrl = window.location.href+'u/'+resultNewUrl;
 
             axios.post('/url/shorten',{

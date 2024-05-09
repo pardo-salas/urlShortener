@@ -19,7 +19,7 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    <div id="app">
+    <div id="app" class="d-flex flex-column vh-100">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -75,9 +75,15 @@
             </div>
         </nav>
 
-        <main class="py-4">
-            @yield('content')
+        <main class="py-4 flex-grow-1 ">
+                @yield('content')
         </main>
+        
+        <footer class="py-3 border-top">
+            <div class="col-md-4 c">
+                <span class="mb-3 mb-md-0 text-muted container">Made by Brian using Laravel & Vue 3</span>
+            </div>
+        </footer>
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </body>

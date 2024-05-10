@@ -22,9 +22,13 @@
     <div id="app" class="d-flex flex-column vh-100">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
+                <div class="d-flex justify-content-center align-items-center">
+                    <img src="{{asset('favicon.png')}}" alt="" srcset="">
+                    <a class="navbar-brand" href="{{ url('/') }}">
+                        Surl
+                    </a>
+                </div>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -57,11 +61,11 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="/stats">Admin Urls</a>
-                                    
+                                    <a class="dropdown-item" href="/">Home</a>
+                                    <a class="dropdown-item" href="/dashboard">Dashboard</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                        onclick="event.preventDefault();
+                                                    document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -75,13 +79,13 @@
             </div>
         </nav>
 
-        <main class="py-4 flex-grow-1 ">
-                @yield('content')
+        <main class="flex-grow-1">
+            @yield('content')
         </main>
         
         <footer class="py-3 border-top">
-            <div class="col-md-4 c">
-                <span class="mb-3 mb-md-0 text-muted container">Made by Brian using Laravel & Vue 3</span>
+            <div class=" container">
+                <span class="mb-3 mb-md-0 text-muted">Made by Brian using Laravel & Vue 3</span>
             </div>
         </footer>
     </div>

@@ -5,53 +5,17 @@
                 <div class="shortener">
                     <div class="section">
                         <div class="section-heading text-center">
-                            <h1 class="fs-1 fw-bold">Surl URL shortener</h1>
+                            <h1 class=" display-2">Improve your links </h1>
                             <br>
                             <!-- Title -->
                             <div class="py-2">
-                                <div class="pageIntroDescription border border-info p-3 mb-0">
-                                    Simple and fast URL shortener! Url Short allows to shorten long links from Instagram, Facebook, YouTube, Twitter, Linked In, WhatsApp, TikTok, blogs and sites.
-                                </div>
+                                <p class="h5">Surl is an open-source URL Shortener that allows you to create, manage, and share short links with ease. Simple and fast to use. </p>
                             </div>
                             <br>
-                            <!-- Shortener -->
-                            <div v-if="props.authorized">
-                                <form action="" class="form">
-                                    <div class="input-group">
-                                        <input type="text" id="p1" placeholder="Put your URL " v-model="url" class="form-control addUrlInput">
-                                    </div>
-                                    <div>
-                                        <button @click.prevent="shortenUrl" class="btn btn-dark my-3">
-                                            Short
-                                        </button>
-                                    </div>
-                                </form>
-                                <br>
-                                <p v-if="!urlNotFound" class="alert alert-danger">
-                                    Url is not valid
-                                </p>
-                                <!-- Section copy button -->
-                                <div class="copylink mb-5"> 
-                                    <span id="output_url"></span>
-                                    <span id="clipboard" @click.prevent="CopyUrl">
-                                        {{ copyText }}
-                                    </span>
-                                </div>
-                            </div>
-                            <!-- Link register -->
-                            <div v-else>
-                                <h5>You are required to register </h5>
-                                <hr>
-                                To shorten your urls 
-                                <hr>
-                                <a href="/register">
-                                    <small>Register Here</small>
-                                </a>
-                                or
-                                <a href="/login">
-                                    <small>Login Here</small>
-                                </a>
-                            </div>
+                            <a class="btn btn-dark" href="/dashboard"> 
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256"><path fill="currentColor" d="M240 88.23a54.43 54.43 0 0 1-16 37L189.25 160a54.27 54.27 0 0 1-38.63 16h-.05A54.63 54.63 0 0 1 96 119.84a8 8 0 0 1 16 .45A38.62 38.62 0 0 0 150.58 160a38.4 38.4 0 0 0 27.31-11.31l34.75-34.75a38.63 38.63 0 0 0-54.63-54.63l-11 11A8 8 0 0 1 135.7 59l11-11a54.65 54.65 0 0 1 77.3 0a54.86 54.86 0 0 1 16 40.23m-131 97.43l-11 11A38.4 38.4 0 0 1 70.6 208a38.63 38.63 0 0 1-27.29-65.94L78 107.31a38.63 38.63 0 0 1 66 28.4a8 8 0 0 0 16 .45A54.86 54.86 0 0 0 144 96a54.65 54.65 0 0 0-77.27 0L32 130.75A54.62 54.62 0 0 0 70.56 224a54.28 54.28 0 0 0 38.64-16l11-11a8 8 0 0 0-11.2-11.34"/></svg> 
+                                Short a link
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -61,65 +25,6 @@
 </template>
 
 <script setup>
-import { ref,defineProps } from 'vue';
-
-const props =defineProps({
-    authorized:Number
-})
-
-//Variables
-let url = ref("")
-let urlNotFound = ref(true)
-let copyText = ref('Copy text to clipboard')
-let result = ref("")
-//Functions
-function shortenUrl(){
-    let newUrl = url.value
-    let newArray = newUrl.split('//')
-    let counter = 0
-    let resultNewUrl = Math.round((Math.pow(36,8) - Math.random() * Math.pow(36,8))).toString(36).slice(1)
-
-    for (let i = 0; i < newArray.length; i++) {
-        //Validate if the urls is rigth
-        if (newArray[i] == 'http:' || newArray[i] == 'https:') {
-            counter++
-        }
-        //Validate if the url starts with wwww
-        if (counter==0) {
-            let newArrayOne = newUrl.split('.')
-            if (newArrayOne[i]=='www') {
-                counter++
-            }
-            let newArrayTwo = newUrl.indexOf('.com')
-            if (newArrayTwo>=0) {
-                counter++
-            }
-        }
-        //If validations is 0 then value is false
-        if(counter==0){
-            urlNotFound.value = false;
-        }else{
-            urlNotFound.value = true;
-            let currentUrl = window.location.href+'u/'+resultNewUrl;
-
-            axios.post('/url/shorten',{
-                url:newUrl,
-                shortlink:currentUrl
-            }).then(function(response){
-                result = response.data
-                $('.copylink').fadeIn(500);
-                $('.copylink').siblings('.form').find("#p1").val(result)
-            });
-        }
-    }
-}
-
-function CopyUrl(){
-    $("#p1").select();
-    copyText = "Url coppied successfully"
-    document.execCommand("copy");
-    url.value = result
-}
 </script>
 
 <style scoped>

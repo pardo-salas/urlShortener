@@ -13,6 +13,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/u/{any}',[UrlShortenerController::class,'handle']);
 
-Route::get('/stats',[UrlShortenerController::class,'stats']);
+Route::get('/dashboard',[UrlShortenerController::class,'dashboard']);
 
 Route::post('/url/shorten',[UrlShortenerController::class,'store']);

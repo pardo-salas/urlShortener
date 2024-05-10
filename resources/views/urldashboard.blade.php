@@ -6,6 +6,6 @@
 
 @section('content')
     <div id="app" class="wrapper_url_stats">
-        <url-statics authorized="{{auth()->user()->id ?? null}}" ></url-statics>
+        <url-dashboard authorized="{{auth()->user()->id ?? null}}" ></url-dashboard>
     </div>
 @endsection

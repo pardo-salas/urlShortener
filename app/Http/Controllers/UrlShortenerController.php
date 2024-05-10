@@ -59,7 +59,7 @@ class UrlShortenerController extends Controller
         }
     }
     //
-    public function stats(Request $request){
-        return view('urlstats');
+    public function dashboard(Request $request){
+        return view('urldashboard');
     }
 }

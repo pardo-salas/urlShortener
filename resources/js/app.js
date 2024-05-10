@@ -16,9 +16,9 @@ import { createApp } from 'vue';
 const app = createApp({});
 
 import UrlShortener from './components/UrlShortener.vue';
-import UrlStatistics from './components/UrlStatistics.vue';
+import UrlDashboard from './components/UrlDashboard.vue';
 app.component('url-shortener',UrlShortener);
-app.component('url-statics',UrlStatistics);
+app.component('url-dashboard',UrlDashboard);
 
 /**
  * The following block of code may be used to automatically register your

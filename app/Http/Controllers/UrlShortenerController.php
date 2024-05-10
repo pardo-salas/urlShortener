@@ -60,6 +60,13 @@ class UrlShortenerController extends Controller
     }
     //
     public function dashboard(Request $request){
-        return view('urldashboard');
+        try {
+            if (auth()->user()->id) {
+                $links = Url::where('user_id',auth()->user()->id)->get();
+                return view('urldashboard',compact('links'));
+            }
+        } catch (Exception $e) {
+            dd($e);
+        }
     }
 }

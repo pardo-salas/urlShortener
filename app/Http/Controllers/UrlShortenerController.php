@@ -38,7 +38,7 @@ class UrlShortenerController extends Controller
         }
     }
     // handle new urls and redirect to old url
-    public function handle(Request $request, $url){
+    public function handle(Request $request,$url){
         $uri = $_SERVER['REQUEST_URI'];
         if ($uri == '') {
             return abort(404);
@@ -58,14 +58,27 @@ class UrlShortenerController extends Controller
             dd($e);
         }
     }
-    //
+    // 
     public function dashboard(Request $request){
         try {
-            if (auth()->user()->id) {
+            if(auth()->user() && auth()->user()->id) {
                 $links = Url::where('user_id',auth()->user()->id)->get();
                 return view('urldashboard',compact('links'));
+            }else{
+                return view('auth.login');
             }
         } catch (Exception $e) {
+
+            dd($e);
+        }
+    }
+    // 
+    public function delete(Request $request,Url $id){
+        try {
+            $id->delete();
+            $links = Url::where('user_id',auth()->user()->id)->get();
+            return response()->json($links);
+        } catch (\Exception $e) {
             dd($e);
         }
     }

@@ -17,9 +17,11 @@ const app = createApp({});
 
 import UrlShortener from './components/UrlShortener.vue';
 import UrlDashboard from './components/UrlDashboard.vue';
+import alert from './components/alertComponent.vue'
+
 app.component('url-shortener',UrlShortener);
 app.component('url-dashboard',UrlDashboard);
-
+app.component('alert',alert);
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

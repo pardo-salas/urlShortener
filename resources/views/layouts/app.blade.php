@@ -79,11 +79,11 @@
             </div>
         </nav>
 
-        <main class="flex-grow-1">
+        <main class="h-100">
             @yield('content')
         </main>
         
-        <footer class="py-3 border-top">
+        <footer class="py-3 border-top bg-white">
             <div class=" container">
                 <span class="mb-3 mb-md-0 text-muted">Made by Brian using Laravel & Vue 3</span>
             </div>

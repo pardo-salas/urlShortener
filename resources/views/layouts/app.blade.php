@@ -23,7 +23,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <div class="d-flex justify-content-center align-items-center">
-                    <img src="{{asset('favicon.png')}}" alt="" srcset="">
+                    <img src="{{asset('url.png')}}" alt="Surl Logo" width="25px" height="25px" srcset="">
                     <a class="navbar-brand" href="{{ url('/') }}">
                         Surl
                     </a>

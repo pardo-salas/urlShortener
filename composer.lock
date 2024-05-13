@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8d5273e7fe51a7454e917e7c1a1c44e9",
+    "content-hash": "3400784056df3f37d342661d2798f97b",
     "packages": [
         {
             "name": "brick/math",
@@ -134,6 +134,118 @@
                 }
             ],
             "time": "2024-02-09T16:56:22+00:00"
+        },
+        {
+            "name": "darkterminal/libsql-client-php",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/darkterminal/libsql-client-php.git",
+                "reference": "ffce3947636cf6fc8243b7ea97d912bb1ceeb09f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/darkterminal/libsql-client-php/zipball/ffce3947636cf6fc8243b7ea97d912bb1ceeb09f",
+                "reference": "ffce3947636cf6fc8243b7ea97d912bb1ceeb09f",
+                "shasum": ""
+            },
+            "require": {
+                "darkterminal/libsql-php-ext": "^1.0",
+                "guzzlehttp/guzzle": "^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Utils/helpers.php",
+                    "src/Utils/constants.php"
+                ],
+                "psr-4": {
+                    "Darkterminal\\LibSQL\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Imam Ali Mustofa",
+                    "email": "darkterminal@duck.com"
+                }
+            ],
+            "description": "PHP client API for libSQL",
+            "support": {
+                "issues": "https://github.com/darkterminal/libsql-client-php/issues",
+                "source": "https://github.com/darkterminal/libsql-client-php/tree/v1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/darkterminal",
+                    "type": "github"
+                },
+                {
+                    "url": "https://paypal.me/lazarusalhambra",
+                    "type": "other"
+                }
+            ],
+            "time": "2024-05-03T10:41:40+00:00"
+        },
+        {
+            "name": "darkterminal/libsql-php-ext",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/darkterminal/libsql-php-ext.git",
+                "reference": "a93f791b18306ebc4818efd27a45648e9ba2cfae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/darkterminal/libsql-php-ext/zipball/a93f791b18306ebc4818efd27a45648e9ba2cfae",
+                "reference": "a93f791b18306ebc4818efd27a45648e9ba2cfae",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.3"
+            },
+            "bin": [
+                "build"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "php-src/constants.php",
+                    "php-src/helpers.php"
+                ],
+                "psr-4": {
+                    "Darkterminal\\LibSQLPHPExtension\\": "php-src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Imam Ali Mustofa",
+                    "email": "darkterminal@duck.com"
+                }
+            ],
+            "description": "LibSQL Native Extension for PHP",
+            "support": {
+                "issues": "https://github.com/darkterminal/libsql-php-ext/issues",
+                "source": "https://github.com/darkterminal/libsql-php-ext/tree/v1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/lazarusalhambra",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/darkterminal",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-05-03T10:07:03+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -9066,8 +9178,9 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2"
+        "php": "^8.2",
+        "ext-pdo": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }

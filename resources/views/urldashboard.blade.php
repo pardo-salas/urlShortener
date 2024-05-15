@@ -6,6 +6,6 @@
 
 @section('content')
     <div id="app" class="wrapper_url_dashboard">
-        <url-dashboard links="{{$links}}" authorized="{{auth()->user()->id ?? null}}" ></url-dashboard>
+        <url-dashboard links="{{$links?? null}}" authorized="{{auth()->user()->id ?? null}}" ></url-dashboard>
     </div>
 @endsection

@@ -58,16 +58,22 @@ class UrlShortenerController extends Controller{
         if ($uri == '') {
             return abort(404);
         }
-        $url = Url::where('new_url','like','%'.$uri.'%')->get(["id","old_url","clicks"]);
-
+        $code = substr($uri,-7);
+        $query = $this->database->getReference($this->tablename)->orderByChild('new_url')->equalTo($code);
+        $url = $query->getValue();
         try {
             if ($url =='' || count($url) == 0) {
                 return abort(404);
             }else{
-                $urlFound = Url::find($url[0]['id']);
-                $urlFound->clicks = $url[0]['clicks']+1;
-                $urlFound->save();
-                return redirect($url[0]['old_url']);
+                //to do, save clicks}
+                $nodoref = $this->database->getReference($this->tablename)->getChild(key($url));
+                $newValues = [
+                    'updated_at' => date('Y-m-d'),
+                    'clicks' => $url[key($url)]['clicks']+1,
+                ];
+                $nodoref->update($newValues);
+
+                return redirect($url[key($url)]['old_url']);
             }
         } catch (Exception $e) {
             dd($e);

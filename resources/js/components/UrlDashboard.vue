@@ -1,34 +1,34 @@
 <template>
     <div class="container pt-2">
+        <!-- Formt -->
         <div class="row">
             <div class="col">
-                <div class="stats">
-                    <div class="section">
-                        <div class="section-heading text-center">
-                            <!-- Shortener -->            
-                            <form action="" class="form">
-                                <div class="d-flex flex-row align-items-center justify-content-between ">
-                                    <div class="col-md-4">
-                                        <input type="text" id="p1" placeholder="Put your URL " v-model="url" class="form-control addUrlInput ">
-                                    </div>
-                                    <div class="mx-2 d-flex align-items-center justify-content-center">
-                                        <p class="border m-2 p-2 bg-secondary rounded text-light">
-                                            / 20
-                                        </p>
-                                        <button @click.prevent="shortenUrl" class="btn btn-dark">
-                                            Short
-                                        </button>
-                                    </div>
+                <div class="section">
+                    <div class="section-heading text-center">
+                        <!-- Shortener -->            
+                        <form action="" class="form">
+                            <div class="d-flex flex-row align-items-center justify-content-between ">
+                                <div class="col-md-4 flex-grow-1">
+                                    <input type="text" id="p1" placeholder="Put your URL " v-model="url" class="form-control addUrlInput required">
                                 </div>
-                            </form>
-                        </div>
+                                <div class="mx-2 d-flex align-items-center justify-content-center">
+                                    <p class="border m-2 p-2 bg-secondary rounded text-light">
+                                         / 20
+                                    </p>
+                                    <button @click.prevent="shortenUrl()" class="btn btn-dark">
+                                        Short
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Data -->
         <div class="row">
-            <div class="col d-flex justify-content-center my-2">
-                <div class="col-md-6 col-12 row border rounded p-2 " v-for="link in links" :key="link.id">
+            <div class="col d-flex flex-wrap justify-content-center my-2">
+                <div class="col-md-5 col-12 m-2 row border rounded p-2 " v-for="link in links" :key="link.id">
                     <div class="mt-2 d-flex item-align-cener justify-content-between">
                         <a :href="link.new_url" target="_blank" class="text-decoration-none fs-3">
                             <span class="opacity-40">/</span>
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <!--  -->
+    <!-- Modal -->
     <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -77,9 +77,10 @@
             </alert>
         </div>
     </div>
-    <div v-if="showAlertSuccess"class="d-flex justify-content-end fixed-bottom mx-2">
-        <alert type="success">
-            The short url have been deleted successfuly
+    <!-- Alert -->
+    <div v-if="showAlert"class="d-flex justify-content-end fixed-bottom mx-2">
+        <alert :type="typeAlert">
+            {{descriptionAlert}}
         </alert>
     </div>
 </template>
@@ -92,16 +93,18 @@ const props =defineProps({
     links:String
 })
 
-const links = ref();
+const links = ref("");
 
 //Variables
 let url = ref("")
-let urlNotFound = ref(true)
 let result = ref("")
 let urlSelected=ref("")
 let inputConfirm=ref("")
+
 let showAlert = ref(false)
-let showAlertSuccess = ref(false)
+let typeAlert = ref('')
+let descriptionAlert = ref('')
+
 //Functions
 
 function shortenUrl(){
@@ -128,41 +131,39 @@ function shortenUrl(){
         }
         //If validations is 0 then value is false
         if(counter==0){
-            urlNotFound.value = false;
+            activeAlert('danger','Put a valid url')
         }else{
-            urlNotFound.value = true;
             let currentUrl = resultNewUrl;
-
             axios.post('/url/shorten',{
                 url:newUrl,
                 shortlink:currentUrl
             }).then(function(response){
-                result = response.data
-                $('.copylink').fadeIn(500);
-                $('.copylink').siblings('.form').find("#p1").val(result)
+                formatDates(response.data)
+                url.value = window.location.origin+"/u/"+resultNewUrl
+                activeAlert('success','Url succesfully created')
             });
+            return
         }
     }
 }
 
 function handleDelete(id){
     if (id != urlSelected.value.shorturl) {
-        showAlert.value = true;
-        setTimeout(() => {
-            showAlert.value=false;
-        }, 5000);
-        return
+        activeAlert('danger','Write the correct ')
+    }else{
+        axios
+            .delete(`/url/delete/${urlSelected.value.id}`)
+            .then(function(response){
+                formatDates(response.data)
+            })
+            .catch(error=>{
+                console.error('Error al eliminar el registro',error)
+            });
+
+            let closeModal= document.getElementById('button-dismiss');
+            closeModal.click()
+            activeAlert('success','Deleted successfully')
     }
-        axios.delete(`/url/delete/${urlSelected.value.id}`).then(function(response){
-            result = response.data
-            formatDates(result)
-        })
-        let closeModal= document.getElementById('button-dismiss');
-        closeModal.click()
-        showAlertSuccess.value = true;
-        setTimeout(() => {
-            showAlertSuccess.value=false;
-        }, 5000);
 }
 
 function formatDates(array){
@@ -175,9 +176,21 @@ function formatDates(array){
     })
     links.value=array
 }
+
+function activeAlert(type,description){
+    typeAlert.value = type
+    descriptionAlert.value = description
+    showAlert.value = true;
+        setTimeout(() => {
+            showAlert.value=false;
+        }, 5000);
+    return
+}
 //
 onMounted(()=>{
-    formatDates(JSON.parse(props.links));
+    if(props.links){
+        formatDates(JSON.parse(props.links));
+    }
 })
 </script>
 

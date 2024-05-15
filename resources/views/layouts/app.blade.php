@@ -79,7 +79,7 @@
             </div>
         </nav>
 
-        <main class="h-100">
+        <main class="flex-grow-1">
             @yield('content')
         </main>
         

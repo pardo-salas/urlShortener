@@ -9,14 +9,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Route::get('/u/{any}',[UrlShortenerController::class,'handle']);
 
 Route::get('/dashboard',[UrlShortenerController::class,'dashboard']);
 
 Route::post('/url/shorten',[UrlShortenerController::class,'store']);
 
-Route::delete('url/delete/{id}',[UrlShortenerController::class,'delete']);
+Route::delete('/url/delete/{id}',[UrlShortenerController::class,'delete']);
 
 Route::put('url/edit/{url}',[UrlShortenerController::class,'edit']);

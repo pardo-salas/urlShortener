@@ -5,34 +5,49 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Exception;
 use App\Models\Url;
+use Kreait\Firebase\Contract\Database;
 
-class UrlShortenerController extends Controller
-{
+class UrlShortenerController extends Controller{
+
+    public function __construct(Database $database)
+    {
+        $this->database = $database;
+        $this->tablename = 'urls';
+    }
     //store old and new url in database
     public function store(Request $request){
         try {
-            if (auth()->user()->id) {
-                $longUrl = $request->get('url');
-                $newGeneratedUrl = $request->get('shortlink');
+            $date = date('Y-m-d');
+            $postData = [
+                'old_url' => $request->url,
+                'new_url' => $request->shortlink,
+                'id_user' => auth()->user()->id,
+                'created_at'=> $date,
+                'updated_at'=> $date,
+                'clicks' => 0
+            ];
+            $res = $this->database->getReference($this->tablename)->push($postData);
+
+            $query =$this->database->getReference($this->tablename)->orderByChild('id_user')->equalTo(auth()->user()->id);
+            $result = $query->getValue();
+            $urls = [];
+            foreach ($result as $key => $value) {
+                $url = new \stdClass();
+                $url->id = $key;
+                $url->old_url = $value['old_url'];
+                $url->new_url = $value['new_url'];
+                $url->id_user = $value['id_user'];
+                $url->created_at = $value['created_at'];
+                $url->updated_at = $value['updated_at'];
+                $url->clicks = $value['clicks'];
                 
-                if($longUrl != '' || $newGeneratedUrl != ''){
-                    $urlFound = Url::where('old_url',$longUrl)->get(["id","new_url"])->toArray();
-                    if (!empty($urlFound)) {
-                        return $urlFound[0]['new_url'];
-                    }
-                    else{
-                        $urlTable = new Url;
-                        $urlTable->old_url = $longUrl;
-                        $urlTable->new_url = $newGeneratedUrl;
-                        $urlTable->user_id = auth()->user()->id ?? null;
-                        $urlTable->user_ip = $_SERVER['REMOTE_ADDR'];
-                        
-                        if ($urlTable->save()) {
-                            return $urlTable->$new_url;
-                        }
-                    }
-                }
+                $urls[] = $url;
             }
+            
+            $links = $urls;
+
+            return $links;
+            
         } catch (Exception $e) {
             dd($e);
         }
@@ -43,16 +58,22 @@ class UrlShortenerController extends Controller
         if ($uri == '') {
             return abort(404);
         }
-        $url = Url::where('new_url','like','%'.$uri.'%')->get(["id","old_url","clicks"]);
-
+        $code = substr($uri,-7);
+        $query = $this->database->getReference($this->tablename)->orderByChild('new_url')->equalTo($code);
+        $url = $query->getValue();
         try {
             if ($url =='' || count($url) == 0) {
                 return abort(404);
             }else{
-                $urlFound = Url::find($url[0]['id']);
-                $urlFound->clicks = $url[0]['clicks']+1;
-                $urlFound->save();
-                return redirect($url[0]['old_url']);
+                //to do, save clicks}
+                $nodoref = $this->database->getReference($this->tablename)->getChild(key($url));
+                $newValues = [
+                    'updated_at' => date('Y-m-d'),
+                    'clicks' => $url[key($url)]['clicks']+1,
+                ];
+                $nodoref->update($newValues);
+
+                return redirect($url[key($url)]['old_url']);
             }
         } catch (Exception $e) {
             dd($e);
@@ -62,7 +83,27 @@ class UrlShortenerController extends Controller
     public function dashboard(Request $request){
         try {
             if(auth()->user() && auth()->user()->id) {
-                $links = Url::where('user_id',auth()->user()->id)->get();
+                $query = $this->database->getReference($this->tablename)->orderByChild('id_user')->equalTo(auth()->user()->id);
+                $data = $query->getValue();
+
+                $urls = [];
+                if (!$data) {
+                    return view('urldashboard');
+                }
+                foreach ($data as $key => $value) {
+                    $url = new \stdClass();
+                    $url->id = $key;
+                    $url->old_url = $value['old_url'];
+                    $url->new_url = $value['new_url'];
+                    $url->id_user = $value['id_user'];
+                    $url->created_at = $value['created_at'];
+                    $url->updated_at = $value['updated_at'];
+                    $url->clicks = $value['clicks'];
+                    
+                    $urls[] = $url;
+                }
+                
+                $links = json_encode($urls);
                 return view('urldashboard',compact('links'));
             }else{
                 return view('auth.login');
@@ -73,13 +114,32 @@ class UrlShortenerController extends Controller
         }
     }
     // 
-    public function delete(Request $request,Url $id){
+    public function delete(Request $request,$id){
         try {
-            $id->delete();
-            $links = Url::where('user_id',auth()->user()->id)->get();
-            return response()->json($links);
+            $this->database->getReference('urls/'.$id)->remove();
+
+            $query =$this->database->getReference($this->tablename)->orderByChild('id_user')->equalTo(auth()->user()->id);
+            $result = $query->getValue();
+            $urls = [];
+            foreach ($result as $key => $value) {
+                $url = new \stdClass();
+                $url->id = $key;
+                $url->old_url = $value['old_url'];
+                $url->new_url = $value['new_url'];
+                $url->id_user = $value['id_user'];
+                $url->created_at = $value['created_at'];
+                $url->updated_at = $value['updated_at'];
+                $url->clicks = $value['clicks'];
+                
+                $urls[] = $url;
+            }
+            
+            $links = $urls;
+
+            return $links;
         } catch (\Exception $e) {
             dd($e);
         }
     }
+
 }

@@ -43,17 +43,7 @@
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
                         @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
+                            
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -79,11 +69,11 @@
             </div>
         </nav>
 
-        <main class="flex-grow-1">
+        <main class="container flex-fill">
             @yield('content')
         </main>
         
-        <footer class="py-3 border-top bg-white">
+        <footer class="py-3 border-top">
             <div class=" container">
                 <span class="mb-3 mb-md-0 text-muted">Made by Brian using Laravel & Vue 3</span>
             </div>

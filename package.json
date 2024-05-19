@@ -15,5 +15,8 @@
         "vite": "^5.0",
         "vue": "^3.2.37",
         "vue-loader": "^17.4.2"
+    },
+    "dependencies": {
+        "firebase": "^10.12.0"
     }
 }

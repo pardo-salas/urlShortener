@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Exception;
 use App\Models\Url;
 use Kreait\Firebase\Contract\Database;
+use Illuminate\Support\Facades\Session;
 
 class UrlShortenerController extends Controller{
 
@@ -16,19 +17,20 @@ class UrlShortenerController extends Controller{
     }
     //store old and new url in database
     public function store(Request $request){
+        $id = $request->session()->get('id');
         try {
             $date = date('Y-m-d');
             $postData = [
                 'old_url' => $request->url,
                 'new_url' => $request->shortlink,
-                'id_user' => auth()->user()->id,
+                'id_user' => $id,
                 'created_at'=> $date,
                 'updated_at'=> $date,
                 'clicks' => 0
             ];
             $res = $this->database->getReference($this->tablename)->push($postData);
 
-            $query =$this->database->getReference($this->tablename)->orderByChild('id_user')->equalTo(auth()->user()->id);
+            $query =$this->database->getReference($this->tablename)->orderByChild('id_user')->equalTo($id);
             $result = $query->getValue();
             $urls = [];
             foreach ($result as $key => $value) {
@@ -43,9 +45,7 @@ class UrlShortenerController extends Controller{
                 
                 $urls[] = $url;
             }
-            
             $links = $urls;
-
             return $links;
             
         } catch (Exception $e) {
@@ -81,35 +81,31 @@ class UrlShortenerController extends Controller{
     }
     // 
     public function dashboard(Request $request){
+        $id = $request->session()->get('id');
         try {
-            if(auth()->user() && auth()->user()->id) {
-                $query = $this->database->getReference($this->tablename)->orderByChild('id_user')->equalTo(auth()->user()->id);
-                $data = $query->getValue();
-
-                $urls = [];
-                if (!$data) {
-                    return view('urldashboard');
-                }
-                foreach ($data as $key => $value) {
-                    $url = new \stdClass();
-                    $url->id = $key;
-                    $url->old_url = $value['old_url'];
-                    $url->new_url = $value['new_url'];
-                    $url->id_user = $value['id_user'];
-                    $url->created_at = $value['created_at'];
-                    $url->updated_at = $value['updated_at'];
-                    $url->clicks = $value['clicks'];
-                    
-                    $urls[] = $url;
-                }
-                
-                $links = json_encode($urls);
-                return view('urldashboard',compact('links'));
-            }else{
-                return view('auth.login');
+            $query = $this->database->getReference($this->tablename)->orderByChild('id_user')->equalTo($id);
+            $data = $query->getValue();
+            $urls = [];
+            if (!$data) {
+                return view('urldashboard');
             }
-        } catch (Exception $e) {
-
+            foreach ($data as $key => $value) {
+                $url = new \stdClass();
+                $url->id = $key;
+                $url->old_url = $value['old_url'];
+                $url->new_url = $value['new_url'];
+                $url->id_user = $value['id_user'];
+                $url->created_at = $value['created_at'];
+                $url->updated_at = $value['updated_at'];
+                $url->clicks = $value['clicks'];
+                
+                $urls[] = $url;
+            }
+            
+            $links = json_encode($urls);
+            return view('urldashboard',compact('links'));
+            
+        } catch (Exception $e){
             dd($e);
         }
     }

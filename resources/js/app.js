@@ -6,7 +6,18 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
+import { initializeApp } from "firebase/app";
+const firebaseConfig = {
+    apiKey: "AIzaSyAEuSEv83FBHeke_t7ow04RgzMaItXXZF4",
+    authDomain: "curso-vue-fc817.firebaseapp.com",
+    projectId: "curso-vue-fc817",
+    storageBucket: "curso-vue-fc817.appspot.com",
+    messagingSenderId: "509002792606",
+    appId: "1:509002792606:web:10c91f3a3fced162e5058f",
+    measurementId: "G-9ESNBPBF8P"
+};
 
+initializeApp(firebaseConfig);
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
  * registering components with the application instance so they are ready

@@ -3,7 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Exception;
+use Kreait\Firebase\Contract\Auth;
+use Kreait\Firebase\Contract\Database;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth as LaravelAuth;
+use Illuminate\Auth\GenericUser;
 
 class LoginController extends Controller
 {
@@ -18,8 +24,6 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
-
     /**
      * Where to redirect users after login.
      *
@@ -32,8 +36,44 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Auth $auth,Database $database)
     {
-        $this->middleware('guest')->except('logout');
+        $this->database = $database;
+        $this->auth = $auth;
+    }
+
+    public function handleCallback(Request $request){
+        try {
+            $userSession = LaravelAuth::user();
+            $user = $request->json('user');
+            
+            
+            $id = $user['id'];
+            $name = $user['name'];
+            $email = $user['email'];
+            
+            if (!$this->database->getReference('users/' . $id)->getSnapshot()->exists()) {
+                $this->database->getReference('users/' . $id)->set([
+                    'name' => $name,
+                    'email' => $email,
+                ]);
+            }
+
+            $request->session()->put('id', $id);
+            $request->session()->put('name', $name);
+            return response()->json(['redirect' => '/dashboard']);
+        } catch (Exception $e) {   
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
+    public function logout(){
+        Session::flush();
+        return redirect('/');
     }
 }

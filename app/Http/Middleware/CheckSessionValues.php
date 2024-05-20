@@ -5,14 +5,15 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Cookie;
 
 class CheckSessionValues
 {
     
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->session()->has('id')) {
+        $value = $request->cookie('id');
+        if (!$value) {
             return redirect()->route('login');
         }
         

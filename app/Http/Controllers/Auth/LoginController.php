@@ -4,12 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Exception;
+use Cookie;
 use Kreait\Firebase\Contract\Auth;
 use Kreait\Firebase\Contract\Database;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Auth as LaravelAuth;
-use Illuminate\Auth\GenericUser;
 
 class LoginController extends Controller
 {
@@ -44,7 +43,6 @@ class LoginController extends Controller
 
     public function handleCallback(Request $request){
         try {
-            $userSession = LaravelAuth::user();
             $user = $request->json('user');
             
             
@@ -59,21 +57,21 @@ class LoginController extends Controller
                 ]);
             }
 
-            $request->session()->put('id', $id);
-            $request->session()->put('name', $name);
+            Cookie::queue('id',$id,60);
+            Cookie::queue('name',$name,60);
+
             return response()->json(['redirect' => '/dashboard']);
         } catch (Exception $e) {   
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    public function showLoginForm()
-    {
+    public function showLoginForm(){
         return view('auth.login');
     }
 
     public function logout(){
-        Session::flush();
+        Cookie::queue(Cookie::forget('id'));
         return redirect('/');
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Exception;
 use App\Models\Url;
 use Kreait\Firebase\Contract\Database;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Cookie;
 
 class UrlShortenerController extends Controller{
 
@@ -17,7 +17,8 @@ class UrlShortenerController extends Controller{
     }
     //store old and new url in database
     public function store(Request $request){
-        $id = $request->session()->get('id');
+
+        $id = $request->cookie('id');
         try {
             $date = date('Y-m-d');
             $postData = [
@@ -54,11 +55,7 @@ class UrlShortenerController extends Controller{
     }
     // handle new urls and redirect to old url
     public function handle(Request $request,$url){
-        $uri = $_SERVER['REQUEST_URI'];
-        if ($uri == '') {
-            return abort(404);
-        }
-        $code = substr($uri,-7);
+        $code = substr($url,-7);
         $query = $this->database->getReference($this->tablename)->orderByChild('new_url')->equalTo($code);
         $url = $query->getValue();
         try {
@@ -81,7 +78,7 @@ class UrlShortenerController extends Controller{
     }
     // 
     public function dashboard(Request $request){
-        $id = $request->session()->get('id');
+        $id = $request->cookie('id');
         try {
             $query = $this->database->getReference($this->tablename)->orderByChild('id_user')->equalTo($id);
             $data = $query->getValue();
@@ -114,7 +111,7 @@ class UrlShortenerController extends Controller{
         try {
             $this->database->getReference('urls/'.$id)->remove();
 
-            $query =$this->database->getReference($this->tablename)->orderByChild('id_user')->equalTo(auth()->user()->id);
+            $query =$this->database->getReference($this->tablename)->orderByChild('id_user')->equalTo($request->cookie('id'));
             $result = $query->getValue();
             $urls = [];
             foreach ($result as $key => $value) {

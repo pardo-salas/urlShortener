@@ -9,11 +9,11 @@
                         <form action="" class="form">
                             <div class="d-flex flex-row align-items-center justify-content-between ">
                                 <div class="col-md-4 flex-grow-1">
-                                    <input type="text" id="p1" placeholder="Put your URL " v-model="url" class="form-control addUrlInput required">
+                                    <input type="text" id="p1" placeholder="Put your URL" v-model="url" class="form-control addUrlInput required">
                                 </div>
                                 <div class="mx-2 d-flex align-items-center justify-content-center">
                                     <p class="border m-2 p-2 bg-secondary rounded text-light">
-                                        / 20
+                                        {{ links.length }} / 20
                                     </p>
                                     <button @click.prevent="shortenUrl()" class="btn btn-dark">
                                         Short
@@ -64,7 +64,7 @@
                 </div>
                 <div class="modal-body d-flex flex-column">
                     <span class="text-danger mb-3">Access to the link will be permanently removed. This action cannot be undone.</span>
-                    <span class="my-2 fw-bold">Type {{ urlSelected.shorturl }} to confirm</span>
+                    <span class="my-2 fw-bold">Type {{ urlSelected.new_url }} to confirm</span>
                     <input class="form-control"type="text" v-model="inputConfirm">
                 </div>
                 <div class="modal-footer">
@@ -109,6 +109,10 @@ let descriptionAlert = ref('')
 //Functions
 
 function shortenUrl(){
+    if(links.value.length == 20){
+        activeAlert("danger","You have reached the limit of urls")
+        return
+    }
     let newUrl = url.value
     let newArray = newUrl.split('//')
     let counter = 0
@@ -149,7 +153,7 @@ function shortenUrl(){
 }
 
 function handleDelete(id){
-    if (id != urlSelected.value.shorturl) {
+    if (id != urlSelected.value.new_url) {
         activeAlert('danger','Write the correct ')
     }else{
         axios

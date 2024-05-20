@@ -4,18 +4,31 @@
     "functions": {
         "api/index.php": { "runtime": "vercel-php@0.6.2" }
     },
-    "routes": [{
-        "src": "/(.*)",
-        "dest": "/api/index.php"
-    }],
+    "routes": [
+        {
+            "src": "/build/(.*)",
+            "dest": "/public/build/"
+          },
+          {
+            "src": "/resources/(.*)",
+            "dest": "/public/resources/"
+          },
+          {
+            "src": "/favicon/(.*)",
+            "dest": "/public/favicon/"
+          },
+          {
+            "src": "/(.*)",
+            "dest": "/api/index.php"
+          }
+    ],
     "env": {
         "APP_ENV": "production",
-        "APP_DEBUG": "true",
+        "APP_DEBUG": "false",
+
+        "APP_NAME":"Surl | Url Shortener",
         "APP_URL": "https://surldev.vercel.app",
         "ASSET_URL":"https://surldev.vercel.app",
-
-        "FIREBASE_CREDENTIALS":"firebase.json",
-        "FIREBASE_DATABASE_URL":"https://curso-vue-fc817-default-rtdb.firebaseio.com/",
 
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",

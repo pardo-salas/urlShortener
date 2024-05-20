@@ -70,7 +70,7 @@
             <div class="container">
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="mb-3 mb-md-0 text-muted">Made by Brian using Laravel & Vue 3</span>
-                    <a class="github" href="https://github.com/pardo-salas/urlShortener">
+                    <a class="github" target="_blank" href="https://github.com/pardo-salas/urlShortener">
                         <svg 
                             viewBox="0 0 256 250" 
                             width="30" 

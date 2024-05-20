@@ -41,7 +41,7 @@
                                 {{ link.clicks }}
                             </div>
                             <button @click="urlSelected=link" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#confirmModal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3zM7 6h10v13H7zm2 2v9h2V8zm4 0v9h2V8z"/></svg></button>
-                            <button class="btn btn-light"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256"><path fill="currentColor" d="M216 28H88a12 12 0 0 0-12 12v36H40a12 12 0 0 0-12 12v128a12 12 0 0 0 12 12h128a12 12 0 0 0 12-12v-36h36a12 12 0 0 0 12-12V40a12 12 0 0 0-12-12m-60 176H52V100h104Zm48-48h-24V88a12 12 0 0 0-12-12h-68V52h104Z"/></svg></button>
+                            <button @click="copyURL(link.complete_url)" class="btn btn-light"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256"><path fill="currentColor" d="M216 28H88a12 12 0 0 0-12 12v36H40a12 12 0 0 0-12 12v128a12 12 0 0 0 12 12h128a12 12 0 0 0 12-12v-36h36a12 12 0 0 0 12-12V40a12 12 0 0 0-12-12m-60 176H52V100h104Zm48-48h-24V88a12 12 0 0 0-12-12h-68V52h104Z"/></svg></button>
                         </div>
                     </div>
                     <span class="mb-2 d-inline-block text-truncate block fs-5 opacity-50">
@@ -186,6 +186,11 @@ function activeAlert(type,description){
             showAlert.value=false;
         }, 5000);
     return
+}
+
+function copyURL(url){
+    navigator.clipboard.writeText(url)
+    activeAlert('success','URL copy successful')
 }
 //
 onMounted(()=>{
